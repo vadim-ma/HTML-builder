@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint .",
     "format": "prettier --write .",
-    "ci:format": "prettier --check ."
+    "ci:format": "prettier --check .",
+    "task1": "node 01-read-file"
   },
   "author": "evgeniimal",
   "license": "ISC",
