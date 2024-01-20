@@ -8,7 +8,8 @@
     "ci:format": "prettier --check .",
     "task1": "node 01-read-file",
     "task2": "node 02-write-file",
-    "task3": "node 03-files-in-folder"
+    "task3": "node 03-files-in-folder",
+    "task4": "node 04-copy-directory"
   },
   "author": "evgeniimal",
   "license": "ISC",
