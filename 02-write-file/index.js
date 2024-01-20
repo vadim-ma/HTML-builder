@@ -16,6 +16,7 @@ const fs = require('node:fs/promises');
   });
   process.on('exit', () => {
     outFh.close();
+    console.log('Bye!');
   });
   console.log("Enter text. Use 'exit' to finish"); // eslint-disable-line quotes
   rl.setPrompt('> ');
