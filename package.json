@@ -10,7 +10,8 @@
     "task2": "node 02-write-file",
     "task3": "node 03-files-in-folder",
     "task4": "node 04-copy-directory",
-    "task5": "node 05-merge-styles"
+    "task5": "node 05-merge-styles",
+    "task6": "node 06-build-page"
   },
   "author": "evgeniimal",
   "license": "ISC",
