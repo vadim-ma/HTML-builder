@@ -7,8 +7,9 @@ async function processFile(name, src, dstStream) {
   srcStream.on('close', async () => {
     await srcFh.close();
   });
-  await srcStream.pipe(dstStream);
-  dstStream.write('\n');
+  return new Promise((resolve, reject) => {
+    srcStream.pipe(dstStream).on('finish', resolve).on('error', reject);
+  });
 }
 
 async function build(src, dst) {
@@ -19,15 +20,15 @@ async function build(src, dst) {
   });
 
   const dir = await fs.readdir(src, { withFileTypes: true });
-  for (const entry of dir) {
-    if (!entry.isFile()) {
-      continue;
-    }
-    if (path.extname(entry.name) !== '.css') {
-      continue;
-    }
-    await processFile(entry.name, src, dstStream);
-  }
+  const promises = dir
+    .filter((entry) => entry.isFile())
+    .filter((entry) => path.extname(entry.name) === '.css')
+    .map((entry) => processFile(entry.name, src, dstStream));
+
+  Promise.all(promises).then(() => {
+    console.log('all');
+    dstStream.end();
+  });
 }
 
 build(
