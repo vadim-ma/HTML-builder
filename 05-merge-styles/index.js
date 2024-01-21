@@ -8,7 +8,10 @@ async function processFile(name, src, dstStream) {
     await srcFh.close();
   });
   return new Promise((resolve, reject) => {
-    srcStream.pipe(dstStream).on('finish', resolve).on('error', reject);
+    srcStream
+      .pipe(dstStream, { end: false })
+      .on('finish', resolve)
+      .on('error', reject);
   });
 }
 
