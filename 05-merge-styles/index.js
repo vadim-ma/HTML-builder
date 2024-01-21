@@ -1,37 +1,21 @@
 const path = require('node:path');
-const fs = require('node:fs/promises');
-
-async function processFile(name, src, dstStream) {
-  const srcFh = await fs.open(path.join(src, name), 'r');
-  const srcStream = srcFh.createReadStream({ autoClose: true });
-  srcStream.on('close', async () => {
-    await srcFh.close();
-  });
-  return new Promise((resolve, reject) => {
-    srcStream
-      .pipe(dstStream, { end: false })
-      .on('finish', resolve)
-      .on('error', reject);
-  });
-}
+const fs = require('node:fs');
+const fsPromises = require('node:fs/promises');
+const streamPromises = require('node:stream/promises');
 
 async function build(src, dst) {
-  const dstFh = await fs.open(dst, 'w');
-  const dstStream = dstFh.createWriteStream({ autoClose: true });
-  dstStream.on('close', async () => {
-    await dstFh.close();
-  });
+  const outStream = fs.createWriteStream(dst);
 
-  const dir = await fs.readdir(src, { withFileTypes: true });
-  const promises = dir
+  const dir = await fsPromises.readdir(src, { withFileTypes: true });
+  const files = dir
     .filter((entry) => entry.isFile())
-    .filter((entry) => path.extname(entry.name) === '.css')
-    .map((entry) => processFile(entry.name, src, dstStream));
-
-  Promise.all(promises).then(() => {
-    console.log('all');
-    dstStream.end();
-  });
+    .filter((entry) => path.extname(entry.name) === '.css');
+  for (const file of files) {
+    const inStream = fs.createReadStream(path.join(src, file.name), {
+      encoding: 'utf8',
+    });
+    await streamPromises.pipeline(inStream, outStream, { end: false });
+  }
 }
 
 build(
