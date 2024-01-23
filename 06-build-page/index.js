@@ -83,7 +83,7 @@ async function bundleCSS() {
 }
 
 async function copyFiles(src, dst) {
-  fsPromises.mkdir(dst, { recursive: true });
+  await fsPromises.mkdir(dst, { recursive: true });
   const dir = await fsPromises.readdir(src, {
     withFileTypes: true,
   });
