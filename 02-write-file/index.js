@@ -15,8 +15,8 @@ const fs = require('node:fs/promises');
     autoClose: true,
   });
   process.on('exit', async () => {
-    await outFh.close();
     console.log('Bye!');
+    await outFh.close();
   });
   console.log("Enter text. Use 'exit' to finish"); // eslint-disable-line quotes
   rl.setPrompt('> ');
